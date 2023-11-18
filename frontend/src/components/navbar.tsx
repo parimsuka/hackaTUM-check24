@@ -3,7 +3,7 @@ import check24 from "@/assets/check-24.png";
 
 export default function Navbar() {
     return (
-        <div className="bg-background h-[100vh] w-[17rem]">
+        <div className="bg-background h-f w-[17rem]">
             <div className="ml-12 pt-40">
                 <Image
                     src={check24}
