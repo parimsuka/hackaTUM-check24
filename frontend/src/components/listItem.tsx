@@ -8,7 +8,7 @@ export default function ListItem(props: {
   address: string,
 }) {
   return (
-    <li className="flex gap-9">
+    <li className="flex gap-9 p-[2rem] hover:transition-all hover:rounded-2xl hover:bg-background">
       <div>
         <div className="bg-black w-[3.9rem] h-[4.5rem]">
         </div>
