@@ -3,7 +3,7 @@ import { Poppins } from 'next/font/google'
 import './globals.css'
 import {ReactNode} from "react";
 import classNames from "classnames";
-import Navbar from "@/components/navbar";
+import SideNavbar from "@/components/SideNavbar";
 
 const poppins = Poppins({ weight: ['400', '500', '600', '700'], subsets: ['latin', 'latin-ext', 'devanagari'] })
 
@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={classNames(poppins.className, 'bg-background')}>
       <main className="flex">
         <div className="w-1/4 p-4 sticky top-0 h-screen">
-          <Navbar/>
+          <SideNavbar/>
         </div>
         <div className="w-3/4">
           {children}

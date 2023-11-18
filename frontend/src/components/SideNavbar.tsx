@@ -6,7 +6,7 @@ import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 
 
-export default function Navbar() {
+export default function SideNavbar() {
   const pathname = usePathname()
   const router = useRouter()
   const paths: NavbarElement[] = [{href: '/', text: 'Address'}, {href: '/search', text: 'Search'}];
