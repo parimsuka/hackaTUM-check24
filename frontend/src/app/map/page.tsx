@@ -23,6 +23,14 @@ export default function ShowExpertsMap(){
             lng:11.6138229,
             ranking:7,
             lat:48.0974410
+        },
+        {
+            id:"1",
+            name:"Ramersdorf-asdadPerlach",
+            description:"Best place inasdad germany",
+            lng:11.6138229,
+            ranking:10,
+            lat:48.20974410
         }
     ]);
 
@@ -53,14 +61,16 @@ export default function ShowExpertsMap(){
                 ma.addClassName(value.id)
             let oldMin = 1
             let oldMax = 10
-            let newMin = 2
-            let newMax = 5
-            let newValue = (((value.ranking - oldMin)* (newMax - newMin)) / (oldMax - oldMin));
+            let newMinSize = 2
+            let newMaxSize = 5
+            let newMinOpacity = 0.3
+            let newMaxOpacity = 1
+            let newValueSize = (((value.ranking - oldMin)* (newMaxSize - newMinSize)) / (oldMax - oldMin));
+            let newValueOpacity = (((value.ranking - oldMin)* (newMaxOpacity- newMinOpacity)) / (oldMax - oldMin));
             let makerElement =  document.getElementsByClassName(`${value.id}`);
 
             for (let i = 0; i < makerElement.length; i++ ) {
-                console.log(newValue)
-                makerElement[i].setAttribute("style", `width:${newValue}rem;height:${newValue}rem`)
+                makerElement[i].setAttribute("style", `opacity:${newValueOpacity};width:${newValueSize}rem;height:${newValueSize}rem`)
             }
 
             ma.getElement().innerHTML = `<span style="z-index: 9999;color: white">${value.ranking}</span>`
