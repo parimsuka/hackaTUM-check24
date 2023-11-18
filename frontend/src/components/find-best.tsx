@@ -8,7 +8,7 @@ const FindBest = () => {
   const GeoLocation = () => <Image src={geoLocation} alt={'location'}/>
   const [postalCode, setPostalCode] = useState('')
   return (
-    <div className={'pl-14 pt-6 flex flex-col justify-center h-full gap-10'}>
+    <div className={'pl-20 pt-6 flex flex-col justify-center h-full gap-10'}>
       <div className={'flex gap-3 flex-col'}>
         <h3 className={'font-bold text-4xl'}>Find</h3>
         <h5 className={'font-bold text-6xl'}>Best Artisans</h5>
@@ -20,7 +20,7 @@ const FindBest = () => {
         leftIcon={<GeoLocation/>}
       />
       <button
-        className={'gap-5 bg-button w-1/3 h-[4rem] rounded-2xl text-white font-bold text-xl'}
+        className={'gap-5 bg-button-main w-1/3 h-[4rem] rounded-2xl text-white font-bold text-xl'}
         onClick={() => fetch(`api/set-postal-code?postalCode=${postalCode}`)}
       >
         Submit
