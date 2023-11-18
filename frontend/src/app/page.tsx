@@ -5,16 +5,8 @@ import FindBest from "@/components/find-best";
 
 export default function Home() {
   return (
-    <main className='flex h-[100vh]'>
+    <div className='flex h-[100vh]'>
       <section className='basis-1/3'>
-        <Image src={check24} alt={'check-24 logo'} height={33} width={134}/>
-        <ul>
-          <li>Address</li>
-          <li>Search</li>
-        </ul>
-        <p>Made with code</p>
-      </section>
-      <section className='basis-2/6'>
         <div className='h-full'>
           <Image
             src={artisan}
@@ -26,6 +18,6 @@ export default function Home() {
       <section className='basis-2/3'>
         <FindBest />
       </section>
-    </main>
+    </div>
   )
 }
