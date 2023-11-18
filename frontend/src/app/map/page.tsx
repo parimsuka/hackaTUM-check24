@@ -1,37 +1,31 @@
 "use client"
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
-
+import  "@/../maps.css";
+import React, { useRef, useEffect, useState } from 'react';
+import * as maptilersdk from '@maptiler/sdk';
+import "@maptiler/sdk/dist/maptiler-sdk.css";
 export default function ShowExpertsMap(){
-    const center = {
-        lat: 7.2905715, // default latitude
-        lng: 6.6337262, // default longitude
-    };
-    const libraries :any = ['places'];
-    const mapContainerStyle = {
-        width: '100vw',
-        height: '100vh',
-    };
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: `${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`,
-        libraries,
-    });
-    if (loadError) {
-        return <div>Error loading maps</div>;
-    }
+    const mapContainer = useRef<HTMLDivElement |null>(null);
+    const map = useRef<maptilersdk.Map | null>(null);
+    const tokyo = { lng: 139.753, lat: 35.6844 };
+    const [zoom] = useState(14);
+    maptilersdk.config.apiKey = `${process.env.NEXT_PUBLIC_MAPS_API_KEY}`;
+    useEffect(() => {
+        if (map.current) return;
 
-    if (!isLoaded) {
-        return <div>Loading maps</div>;
-    }
+        map.current = new maptilersdk.Map({
+            container: mapContainer.current ?? '',
+            style: maptilersdk.MapStyle.STREETS,
+            center: [tokyo.lng, tokyo.lat],
+            zoom: zoom
+        });
+
+    }, [tokyo.lng, tokyo.lat, zoom]);
     return(
             <div className="bg-view-main h-full w-full">
                 <div className="w-full h-full">
-                    <GoogleMap
-                        mapContainerStyle={mapContainerStyle}
-                        zoom={10}
-                        center={center}
-                    >
-                        <Marker position={center} />
-                    </GoogleMap>
+                    <div className="map-wrap">
+                        <div ref={mapContainer} className="map" />
+                    </div>
                 </div>
             </div>
          );
