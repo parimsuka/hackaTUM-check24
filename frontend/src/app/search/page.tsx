@@ -26,7 +26,7 @@ export default function Home() {
     }
   ]);
   return (
-    <div className="flex">
+    <div className="flex bg-view-main">
       <div className="ml-[4.563rem] mt-[8.375rem]">
             <span className="font-semibold">
                 Hello citizen, from
