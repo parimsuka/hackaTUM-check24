@@ -50,6 +50,12 @@ export default function Home() {
                             })}
                         </ul>
                     </div>
+                    <div style={{textAlignLast: "center"}} className="mt-[5.8rem]">
+                        <button
+                                className="bg-button-secondary  text-button-text rounded-[12px] w-[22.625rem] h-[4.5rem]">
+                            Load More
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>
