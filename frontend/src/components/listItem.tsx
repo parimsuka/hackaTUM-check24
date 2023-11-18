@@ -1,6 +1,5 @@
-import rankingIcon from '@/assets/ranking.svg'
+import RankingIcon from '@/assets/ranking.svg'
 import Image from "next/image";
-import locationIcon from '@/assets/location.svg';
 
 export default function ListItem(props: {
   name: string,
@@ -22,7 +21,7 @@ export default function ListItem(props: {
         </div>
         <div className="flex gap-12">
           <div className="flex gap-6 items-center">
-            <Image src={rankingIcon} alt={"ranking"}/>
+            <RankingIcon />
             <span>Ranking: {ranking}</span>
           </div>
         </div>
