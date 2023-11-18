@@ -36,14 +36,14 @@ class AllServiceProviders():
 
     def parse_service_providers(self, service_provider_filename, quality_filename):
         quality_dict = None
-        with open(quality_filename, 'r') as quality_file:
+        with open(quality_filename, 'r', encoding='utf-8') as quality_file:
             quality_dict = {e['profile_id']: {
                 'picture_score': e['profile_picture_score'],
                 'description_score': e['profile_description_score']
                 } for e in json.load(quality_file)}
         if quality_dict is None:
             return
-        with open(service_provider_filename, 'r') as service_provider_file:
+        with open(service_provider_filename, 'r', encoding='utf-8') as service_provider_file:
             service_providers = []
             for i, service_provider in enumerate(json.load(service_provider_file)):
                 id = int(service_provider['id'])
