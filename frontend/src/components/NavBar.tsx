@@ -2,8 +2,8 @@ import React from 'react';
 import '@/../navbar.css';
 import Link from "next/link";
 import Image from "next/image";
-import listIcon from "@/assets/ListView.svg";
-import mapIcon from "@/assets/MapView.svg";
+import ListIcon from "@/assets/ListView.svg";
+import MapIcon from "@/assets/MapView.svg";
 
 export default function Navbar(props:{
     greetings:string,
@@ -22,15 +22,14 @@ export default function Navbar(props:{
 
             <div className="grid grid-cols-2 gap-6">
                 <Link href={"/search"}>
-                    <div className=" w-[40px] h-[40px] flex  bg-text-secondary">
-                        <Image className="m-auto" alt={"List Icon"} src={listIcon}/>
+                    <div className=" w-[40px] h-[40px] flex  bg-text-secondary flex items-center justify-center">
+                        <ListIcon />
                     </div>
                 </Link>
 
                 <Link href={"/map"}>
-                    <div className="cursor-pointer bg-button-main flex w-[40px] h-[40px]">
-
-                        <Image className="m-auto" alt={"Map Icon"} src={mapIcon}/>
+                    <div className="cursor-pointer bg-button-main flex w-[40px] h-[40px] flex items-center justify-center">
+                        <MapIcon/>
                     </div>
                 </Link>
             </div>

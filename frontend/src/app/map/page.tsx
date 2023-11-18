@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import Navbar from "@/components/NavBar";
+
 export default function ShowExpertsMap(){
     const [markers, setMarkers] = useState([
         {

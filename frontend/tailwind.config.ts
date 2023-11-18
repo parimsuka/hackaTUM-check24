@@ -23,7 +23,10 @@ const config: Config = {
           main:'#013474',
           secondary:'#F8DB95'
         },
-        gray: '#D9D9D9',
+        gray: {
+          200: '#D9D9D9',
+          400: '#DDDDDD',
+        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

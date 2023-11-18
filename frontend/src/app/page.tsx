@@ -1,5 +1,5 @@
 import Image from "next/image";
-import artisan from '@/assets/artisan.jpg'
+import artisan from '@/assets/artisan.png'
 import FindBest from "@/components/find-best";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
           />
         </div>
       </section>
-      <section className='basis-3/5'>
+      <section className='basis-3/5 bg-view-main'>
         <FindBest />
       </section>
     </div>
