@@ -1,4 +1,6 @@
-export async function getPostalCode(postalCode:string){
+import {AppResponse} from "@/types/utils";
+
+export async function sendPostalCode(postalCode:string){
   try {
     const getResponse = await fetch(
       `api/set-postal-code?postalCode=${postalCode}`,
@@ -10,11 +12,10 @@ export async function getPostalCode(postalCode:string){
       },
     );
     if (getResponse.status === 200) {
-      return await getResponse.json();
+      return await getResponse.json() as AppResponse;
     } else {
       throw new Error(getResponse.statusText);
     }
-
   }
   catch (error) {
   }
