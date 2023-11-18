@@ -1,10 +1,6 @@
 package com.demo.data;
 
-import com.demo.managers.RankingManager;
-import com.demo.model.Craftsman;
-import com.demo.model.Postcode;
-import com.demo.model.ProfileQualityFactor;
-import com.demo.model.ServiceProviderProfile;
+import com.demo.model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
@@ -12,18 +8,30 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class DataLoader {
 
+    Map<Long, ProfileQualityFactor> qualityFactorMap;
+    Map<Long, ServiceProviderProfile> serviceProviderMap;
+    Map<String, Postcode> postCodeMap;
+
     public Map<String, PriorityQueue<Craftsman>> getCraftsmenByPostalCode() {
-        return loadCraftsmenData("src/main/resources/data/quality_factor_score.json", "src/main/resources/data/service_provider_profile.json", "src/main/resources/data/postcode.json");
+        return loadCraftsmenData("src/main/resources/data/quality_factor_score.json",
+                "src/main/resources/data/service_provider_profile.json",
+                "src/main/resources/data/postcode.json");
     }
 
     public Map<String, PriorityQueue<Craftsman>> loadCraftsmenData(String qualityFactorFilePath, String serviceProviderFilePath, String postcodeFilePath) {
         List<ProfileQualityFactor> qualityFactors = readJsonFile(qualityFactorFilePath, new TypeReference<List<ProfileQualityFactor>>() {});
         List<ServiceProviderProfile> serviceProviders = readJsonFile(serviceProviderFilePath, new TypeReference<List<ServiceProviderProfile>>() {});
         List<Postcode> postcodes = readJsonFile(postcodeFilePath, new TypeReference<List<Postcode>>() {});
+
+        qualityFactorMap = convertListToMap(qualityFactors, ProfileQualityFactor::getProfile_id);
+        serviceProviderMap = convertListToMap(serviceProviders, ServiceProviderProfile::getId);
+        postCodeMap = convertListToMap(postcodes, Postcode::getPostcode);
 
         // Assuming you have Craftsmen class and methods for conversion
         return convertTocraftsmenByPostalCode(qualityFactors, serviceProviders, postcodes);
@@ -40,49 +48,45 @@ public class DataLoader {
         }
     }
 
+    public <T, K> Map<K, T> convertListToMap(List<T> list, Function<T, K> keyExtractor) {
+        return list.stream()
+                .collect(Collectors.toMap(keyExtractor, Function.identity()));
+    }
+
     private Map<String, PriorityQueue<Craftsman>> convertTocraftsmenByPostalCode(
             List<ProfileQualityFactor> qualityFactors,
             List<ServiceProviderProfile> serviceProviders,
             List<Postcode> postcodes) {
 
-        // Create a map to associate craftsmen with postal codes
-        Map<String, PriorityQueue<Craftsman>> craftsmenByPostalCode = new HashMap<>();
+        // Use parallel streams to process the postcodes concurrently
+        Map<String, PriorityQueue<Craftsman>> craftsmenByPostalCode = postcodes.stream()
+                .parallel()
+                .limit(2)  // Process the first two postcodes
+                .collect(Collectors.toMap(
+                        Postcode::getPostcode,
+                        postcode -> {
+                            // Use a priority queue to maintain craftsmen in sorted order
+                            PriorityQueue<Craftsman> craftsmenQueue = new PriorityQueue<>(Collections.reverseOrder());
 
-        // Iterate over postcodes
-        for (Postcode postcode : postcodes) {
-            String postalCode = postcode.getPostcode();
+                            // Iterate over craftsmen and associate them with postal codes
+                            qualityFactors.stream()
+                                    .filter(qualityFactor -> shouldRankCraftsman(findServiceProviderById(serviceProviders, qualityFactor.getProfile_id()), postcode))
+                                    .map(qualityFactor -> convertToCraftsman(qualityFactor, findServiceProviderById(serviceProviders, qualityFactor.getProfile_id()), postcode))
+                                    .forEach(craftsman -> craftsmenQueue.add(craftsman));
 
-            // Initialize a priority queue for each postal code
-            PriorityQueue<Craftsman> craftsmenQueue = new PriorityQueue<>();
-            craftsmenByPostalCode.put(postalCode, craftsmenQueue);
-
-            // Iterate over craftsmen and associate them with postal codes
-            for (ProfileQualityFactor qualityFactor : qualityFactors) {
-                // Assuming there's a method to find the corresponding service provider by profile_id
-                ServiceProviderProfile serviceProvider = findServiceProviderById(serviceProviders, qualityFactor.getProfile_id());
-
-                // Only add craftsmen if the condition holds
-                if (shouldRankCraftsman(serviceProvider, postcode)) {
-                    Craftsman craftsman = convertToCraftsman(qualityFactor, serviceProvider, postcode);
-                    craftsmenQueue.add(craftsman);
-
-//                    rankingManager.updateRanking(craftsman.getId(), craftsman);
-                }
-            }
-        }
+                            return craftsmenQueue;
+                        },
+                        (queue1, queue2) -> {
+                            // Merge priority queues for parallel processing
+                            queue1.addAll(queue2);
+                            return queue1;
+                        }
+                ));
 
         return craftsmenByPostalCode;
     }
 
-//    private void insertCraftsmenIntoRankingManager(Map<String, PriorityQueue<Craftsman>> craftsmenByPostalCode) {
-//        // Insert craftsmen into the RankingManager
-//        for (Craftsman craftsman : craftsmen) {
-//            rankingManager.updateRanking(craftsman.getZipCode(), craftsman);
-//        }
-//    }
-
     // Additional helper methods for conversion and retrieval can be added as needed
-
     private ServiceProviderProfile findServiceProviderById(List<ServiceProviderProfile> serviceProviders, long profileId) {
         // Implement logic to find the service provider by profile_id
         return serviceProviders.stream()
@@ -162,7 +166,7 @@ public class DataLoader {
             maxDrivingDistanceAdjustment = 5.0;
         }
 
-        return serviceProvider.getMax_driving_distance() + maxDrivingDistanceAdjustment;
+        return serviceProvider.getMax_driving_distance() / 1000 + maxDrivingDistanceAdjustment;
     }
 
     private boolean shouldRankCraftsman(ServiceProviderProfile serviceProvider, Postcode postcode) {
@@ -172,5 +176,78 @@ public class DataLoader {
 
         // Only rank craftsmen if the individual adapted MAX_DRIVING_DISTANCE is higher than the actual calculated DISTANCE
         return adjustedMaxDistance > distance;
+    }
+
+    public UpdatedFields updateCraftsmenByPostalCode(
+            Map<String, PriorityQueue<Craftsman>> craftsmenByPostalCode,
+            PatchRequest patchRequest,
+            Long craftsmanId) {
+
+        // Use parallel streams to process the affected zip codes concurrently
+        craftsmenByPostalCode.keySet().stream().forEach(zipCode -> {
+            // Retrieve craftsmen for the given craftsmanId
+            ProfileQualityFactor qualityFactor = qualityFactorMap.get(craftsmanId);
+            ServiceProviderProfile serviceProviderProfile = serviceProviderMap.get(craftsmanId);
+
+            // Perform null checks for safety
+            if (qualityFactor != null && serviceProviderProfile != null) {
+                // Update the quality factor and service provider profile
+                qualityFactor.setProfile_picture_score(patchRequest.getProfilePictureScore());
+                qualityFactor.setProfile_description_score(patchRequest.getProfileDescriptionScore());
+                serviceProviderProfile.setMax_driving_distance(patchRequest.getMaxDrivingDistance());
+
+                // Update the maps with the modified objects
+                qualityFactorMap.put(craftsmanId, qualityFactor);
+                serviceProviderMap.put(craftsmanId, serviceProviderProfile);
+
+                // Update the priority queue if needed
+//                if (shouldRankCraftsman(serviceProviderProfile, postCodeMap.get(zipCode))) {
+                    System.out.println("UPDATEEEEEEED");
+                    // Retrieve the existing priority queue for the zip code
+                    PriorityQueue<Craftsman> existingQueue = craftsmenByPostalCode.get(zipCode);
+
+                    System.out.println(existingQueue);
+
+
+//                    PriorityQueue<Craftsman> updatedQueue = existingQueue.stream()
+//                            .filter(craftsman -> craftsman.getId().equals(craftsmanId))
+//                            .map(craftsman -> convertToCraftsman(qualityFactor, serviceProviderProfile, postCodeMap.get(zipCode)))
+//                            .collect(Collectors.toCollection(() -> new PriorityQueue<>(Collections.reverseOrder())));
+//
+//                    existingQueue.removeIf(craftsman -> craftsman.getId().equals(craftsmanId));
+//                    existingQueue.addAll(updatedQueue);
+
+                    Craftsman craftsmanToUpdate = existingQueue.stream()
+                            .filter(craftsman -> craftsman.getId().equals(craftsmanId))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (craftsmanToUpdate != null) {
+                        // Remove and add back to maintain the order
+                        existingQueue.remove(craftsmanToUpdate);
+
+                        // Update the specific craftsman with the new values
+                        System.out.println(craftsmanToUpdate.getRankingScore());
+
+                        Craftsman newCraftsMan = convertToCraftsman(qualityFactor, serviceProviderProfile, postCodeMap.get(zipCode));
+
+                        System.out.println(newCraftsMan.getRankingScore());
+
+                        existingQueue.add(newCraftsMan);
+
+
+                    }
+
+
+
+                    System.out.println(existingQueue);
+
+                    // Replace the existing priority queue with the updated one
+//                    craftsmenByPostalCode.put(zipCode, updatedQueue);
+//                }
+            }
+        });
+
+        return new UpdatedFields(patchRequest.getMaxDrivingDistance(), patchRequest.getProfilePictureScore(), patchRequest.getProfileDescriptionScore());
     }
 }

@@ -9,9 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdatedFields {
-    private Double maxDrivingDistance;
-    private Double profilePictureScore;
-    private Double profileDescriptionScore;
+    private long maxDrivingDistance;
+    private double profilePictureScore;
+    private double profileDescriptionScore;
 
     // Constructors, getters, and setters
 }

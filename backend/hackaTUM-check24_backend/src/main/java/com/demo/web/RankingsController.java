@@ -2,14 +2,18 @@ package com.demo.web;
 
 import com.demo.model.*;
 import com.demo.service.RankingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/rankings")
+@RequestMapping(value = "/rankings")
 public class RankingsController {
 
     private final RankingService rankingService;
@@ -19,22 +23,28 @@ public class RankingsController {
         this.rankingService = rankingService;
     }
 
-    @PostMapping("/update/{craftsmanId}")
+    @GetMapping("")
+    public String empty() {
+        return "hellooo";
+    }
+
+    @PostMapping("/craftman/{craftman_id}")
     public ResponseEntity<PatchResponse> updateRanking(
-            @PathVariable Long craftsmanId,
+            @PathVariable Long craftman_id,
             @RequestBody PatchRequest patchRequest) {
 
-        UpdatedFields updatedCraftsman = rankingService.updateRanking(craftsmanId, patchRequest);
+        UpdatedFields updatedCraftsman = rankingService.updateRanking(craftman_id, patchRequest);
 
-        PatchResponse patchResponse = new PatchResponse(craftsmanId, updatedCraftsman);
+        PatchResponse patchResponse = new PatchResponse(craftman_id, updatedCraftsman);
+
         return ResponseEntity.ok(patchResponse);
     }
 
-    @GetMapping("/getTopN")
+    @GetMapping("/craftsmen")
     public ResponseEntity<Response> getTopNRankings(
-            @RequestParam String zipCode) {
+            @RequestParam String postalcode) {
 
-        List<Craftsman> topRankings = rankingService.getTopNRankings(zipCode, 20);
+        List<Craftsman> topRankings = rankingService.getTopNRankings(postalcode, 20);
         Response response = new Response(topRankings);
         return ResponseEntity.ok(response);
     }
