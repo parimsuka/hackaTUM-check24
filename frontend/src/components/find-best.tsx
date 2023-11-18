@@ -9,7 +9,7 @@ const FindBest = () => {
   const GeoLocation = () => <Image src={geoLocation} alt={'location'}/>
   const [postalCode, setPostalCode] = useState('')
   return (
-    <div className={'pl-14 pt-6 flex flex-col justify-center h-full gap-10'}>
+    <div className={'pl-20 pt-6 flex flex-col justify-center h-full gap-10'}>
       <div className={'flex gap-3 flex-col'}>
         <h3 className={'font-bold text-4xl'}>Find</h3>
         <h5 className={'font-bold text-6xl'}>Best Artisans</h5>
