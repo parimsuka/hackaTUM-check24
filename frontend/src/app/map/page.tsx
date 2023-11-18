@@ -4,7 +4,7 @@ import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 export default function ShowExpertsMap(){
     const center = {
         lat: 7.2905715, // default latitude
-        lng: 80.6337262, // default longitude
+        lng: 6.6337262, // default longitude
     };
     const libraries :any = ['places'];
     const mapContainerStyle = {
