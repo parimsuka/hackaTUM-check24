@@ -3,6 +3,7 @@ import LocationInput from "@/components/location-input";
 import geoLocation from '@/assets/geo-location.svg'
 import Image from "next/image";
 import {useState} from "react";
+import {getPostalCode} from "@/http/requests";
 
 const FindBest = () => {
   const GeoLocation = () => <Image src={geoLocation} alt={'location'}/>
@@ -21,7 +22,7 @@ const FindBest = () => {
       />
       <button
         className={'gap-5 bg-button w-1/3 h-[4rem] rounded-2xl text-white font-bold text-xl'}
-        onClick={() => fetch(`api/set-postal-code?postalCode=${postalCode}`)}
+        onClick={() => getPostalCode(postalCode)}
       >
         Submit
       </button>
