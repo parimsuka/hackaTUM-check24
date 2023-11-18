@@ -1,0 +1,11 @@
+.heading {
+    margin: 0;
+    padding-left: 4rem;
+    padding-top: 2rem;
+    color: black;
+}
+
+.heading > h1 {
+    padding: 10px;
+    margin: 0;
+}

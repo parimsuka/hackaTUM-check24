@@ -8,7 +8,7 @@ import Address from '@/assets/address.svg'
 import {useMemo} from "react";
 
 
-export default function Navbar() {
+export default function SideNavbar() {
   const pathname = usePathname()
   const router = useRouter()
   const paths: NavbarElement[] = [

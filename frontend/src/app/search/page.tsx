@@ -2,6 +2,7 @@
 import ListItem from "@/components/listItem";
 import {getCraftsmen} from "@/http/requests";
 import LoadMoreButton from "@/components/load-more-button";
+import Navbar from "@/components/NavBar";
 import useSWR from "swr";
 
 export default function Home() {
@@ -17,12 +18,7 @@ export default function Home() {
   return (
     <div className="flex bg-view-main min-h-full w-full">
       <div className="px-16 py-28 w-full">
-        <h3 className="font-semibold mb-4">
-                Hello citizen, from
-            </h3>
-        <h5 className="font-bold text-2xl">
-              Rosenheim, Kapuzinerweg 4
-            </h5>
+        <Navbar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
         <div className="mt-16">
           <ul className="grid gap-y-10">
             {data?.map((value, index) => {
