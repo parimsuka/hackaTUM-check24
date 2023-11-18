@@ -1,10 +1,7 @@
-"use client";
-import Navbar from "@/components/navbar";
-import {useState} from "react";
-import Listitem from "@/components/listItem";
+import ListItem from "@/components/listItem";
 
 export default function Home() {
-  const [craftmen, setCraftmen] = useState([
+  const craftmen = [
     {
       id: "0",
       name: "Omar",
@@ -24,42 +21,38 @@ export default function Home() {
       address: "8320,swag"
 
     }
-  ]);
+  ];
   return (
-    <main>
-      <div className="flex">
-        <Navbar/>
-        <div className="ml-[4.563rem] mt-[8.375rem]">
-            <span className="font-semibold">
+    <div className="flex bg-view-main min-h-full w-full">
+      <div className="px-16 py-28 w-full">
+        <h3 className="font-semibold mb-4">
                 Hello citizen, from
-            </span>
-          <br/>
-          <span className="font-extrabold text-2xl">
+            </h3>
+        <h5 className="font-bold text-2xl">
               Rosenheim, Kapuzinerweg 4
-            </span>
-          <div className="pl-8 mt-16">
-            <ul className="grid gap-y-20">
-              {craftmen.map((value, index) => {
-                return (
-                  <Listitem
-                    name={value.name}
-                    address={value.address}
-                    key={index}
-                    ranking={value.ranking}
-                  />
-                )
-              })}
-            </ul>
-          </div>
-          <div style={{textAlignLast: "center"}} className="mt-[5.8rem]">
-            <button
-              className="bg-button-secondary  text-button-text rounded-[12px] w-[22.625rem] h-[4.5rem]">
-              Load More
-            </button>
-          </div>
+            </h5>
+        <div className="pl-8 mt-16">
+          <ul className="grid gap-y-20">
+            {craftmen.map((value, index) => {
+              return (
+                <ListItem
+                  name={value.name}
+                  address={value.address}
+                  key={index}
+                  ranking={value.ranking}
+                />
+              )
+            })}
+          </ul>
+        </div>
+        <div style={{textAlignLast: "center"}} className="mt-[5.8rem]">
+          <button
+            className="bg-button-secondary  text-button-text rounded-[12px] w-[22.625rem] h-[4.5rem]">
+            Load More
+          </button>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 

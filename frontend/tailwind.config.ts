@@ -14,8 +14,8 @@ const config: Config = {
           secondary: '#666666',
         },
         view: {
-          main: '#F0EEF6',
-          secondary: '#F4F4F4',
+          main: '#F4F4F4',
+          secondary: '#F0EEF6',
         },
         background: '#D9ECD9',
         button: {
