@@ -4,9 +4,9 @@ from coordinates import Coordinates
 
 class ServiceProvider():
 
-    def __init__(self, id, lon, lat, max_driving_distance, picture_score, description_score) -> None:
+    def __init__(self, id, coordinates, max_driving_distance, picture_score, description_score) -> None:
         self.id = id
-        self.coordinates = Coordinates(lat, lon)
+        self.coordinates = coordinates
         self.max_driving_distance = max_driving_distance
         self.picture_score = picture_score
         self.description_score = description_score
@@ -49,10 +49,11 @@ class AllServiceProviders():
                 id = int(service_provider['id'])
                 lon = float(service_provider['lon'])
                 lat = float(service_provider['lat'])
+                coordinates = Coordinates(lat, lon)
                 max_driving_distance = int(service_provider['max_driving_distance'])
                 picture_score = quality_dict[i+1]['picture_score']
                 description_score = quality_dict[i+1]['description_score']
-                sp = ServiceProvider(id, lon, lat, max_driving_distance, picture_score, description_score)
+                sp = ServiceProvider(id, coordinates, max_driving_distance, picture_score, description_score)
                 service_providers.append(sp)
         return service_providers
 
