@@ -21,10 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={classNames(poppins.className, 'bg-background')}>
       <main className="flex">
-        <div className="w-1/4 p-4 sticky top-0 h-screen">
+        <div className="w-1/6 p-4 sticky top-0 h-screen">
           <Navbar/>
         </div>
-        <div className="w-3/4">
+        <div className="w-5/6">
           {children}
         </div>
       </main>

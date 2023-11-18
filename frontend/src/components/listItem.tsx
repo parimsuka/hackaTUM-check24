@@ -5,8 +5,8 @@ import locationIcon from '@/assets/location.svg';
 export default function ListItem(props: {
   name: string,
   ranking: number,
-  address: string,
 }) {
+  const ranking = (props.ranking).toPrecision(2)
   return (
     <li className="flex gap-9 p-[2rem] hover:transition-all hover:rounded-2xl hover:bg-background">
       <div>
@@ -17,17 +17,13 @@ export default function ListItem(props: {
         <div className='flex justify-between'>
           <span>{props.name}</span>
           <div className='text-button-main font-bold text-xl'>
-            {props.ranking / 100}
+            {ranking}
           </div>
         </div>
         <div className="flex gap-12">
           <div className="flex gap-6 items-center">
             <Image src={rankingIcon} alt={"ranking"}/>
-            <span>Ranking: {props.ranking}</span>
-          </div>
-          <div className="flex gap-6 items-center">
-            <Image src={locationIcon} alt={"location"}/>
-            <span>Address: {props.address}</span>
+            <span>Ranking: {ranking}</span>
           </div>
         </div>
       </div>

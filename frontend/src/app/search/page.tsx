@@ -1,27 +1,18 @@
 import ListItem from "@/components/listItem";
+import {AppResponse, CraftsmanResponse} from "@/types/utils";
 
-export default function Home() {
-  const craftmen = [
-    {
-      id: "0",
-      name: "Omar",
-      ranking: 460,
-      address: "8320,rosenheim"
-    },
-    {
-      id: "1",
-      name: "Ahmed",
-      ranking: 212,
-      address: "8320, berlin"
-    },
-    {
-      id: "2",
-      name: "parim",
-      ranking: 300,
-      address: "8320,swag"
 
-    }
-  ];
+export async function  getCraftsmen() {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/get-data`)
+  const jsonData = await data.json() as AppResponse<CraftsmanResponse, boolean>
+  if ("error" in jsonData) {
+    throw new Error(`Request could not be completed. Please check the endpoint. Error ${jsonData.error}`)
+  }
+  return jsonData.data.craftsmen
+}
+
+export default async function Home() {
+  const craftsmen = await getCraftsmen()
   return (
     <div className="flex bg-view-main min-h-full w-full">
       <div className="px-16 py-28 w-full">
@@ -31,15 +22,14 @@ export default function Home() {
         <h5 className="font-bold text-2xl">
               Rosenheim, Kapuzinerweg 4
             </h5>
-        <div className="pl-8 mt-16">
-          <ul className="grid gap-y-20">
-            {craftmen.map((value, index) => {
+        <div className="mt-16">
+          <ul className="grid gap-y-10">
+            {craftsmen.map((value, index) => {
               return (
                 <ListItem
                   name={value.name}
-                  address={value.address}
                   key={index}
-                  ranking={value.ranking}
+                  ranking={value.rankingScore}
                 />
               )
             })}

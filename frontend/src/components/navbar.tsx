@@ -12,7 +12,7 @@ export default function Navbar() {
   const paths: NavbarElement[] = [{href: '/', text: 'Address'}, {href: '/search', text: 'Search'}];
   const hasGoBack = pathname !== paths[0].href
   return (
-    <div className="bg-background flex flex-col justify-around pl-12 pt-20 h-full">
+    <div className="bg-background flex flex-col justify-around items-center h-full">
         <Image
           src={check24}
           alt={'check24 logo'}

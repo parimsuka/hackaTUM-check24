@@ -3,11 +3,19 @@ import LocationInput from "@/components/location-input";
 import geoLocation from '@/assets/geo-location.svg'
 import Image from "next/image";
 import {useState} from "react";
-import {getPostalCode} from "@/http/requests";
+import {sendPostalCode} from "@/http/requests";
+import {useRouter} from "next/navigation";
 
 const FindBest = () => {
   const GeoLocation = () => <Image src={geoLocation} alt={'location'}/>
   const [postalCode, setPostalCode] = useState('')
+  const router = useRouter()
+
+  const onSendPostalCode = async () => {
+    await sendPostalCode(postalCode)
+    router.push('/search')
+  }
+
   return (
     <div className={'pl-20 pt-6 flex flex-col justify-center h-full gap-10'}>
       <div className={'flex gap-3 flex-col'}>
@@ -21,8 +29,8 @@ const FindBest = () => {
         leftIcon={<GeoLocation/>}
       />
       <button
-        className={'gap-5 bg-button w-1/3 h-[4rem] rounded-2xl text-white font-bold text-xl'}
-        onClick={() => getPostalCode(postalCode)}
+        className={'gap-5 bg-button-main w-1/3 h-[4rem] rounded-2xl text-white font-bold text-xl'}
+        onClick={onSendPostalCode}
       >
         Submit
       </button>
