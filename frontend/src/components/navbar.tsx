@@ -5,6 +5,7 @@ import NavbarItem, {NavbarElement} from "@/components/NavbarItem";
 import {usePathname, useRouter} from "next/navigation";
 import Search from '@/assets/search.svg';
 import Address from '@/assets/address.svg'
+import {useMemo} from "react";
 
 
 export default function Navbar() {
@@ -22,7 +23,9 @@ export default function Navbar() {
       Picture: Search
     }
   ];
+  const currentIndex = useMemo(() => paths.findIndex(i => i.href === pathname), [pathname])
   const hasGoBack = pathname !== paths[0].href
+
   return (
     <div className="bg-background flex flex-col justify-around items-center h-full">
       <Image
@@ -31,7 +34,7 @@ export default function Navbar() {
       />
       <ul className="grid grid-cols-1 gap-y-10">
         {
-          paths.map((path) => {
+          paths.map((path, index) => {
             return (
               <NavbarItem
                 text={path.text}
@@ -39,6 +42,7 @@ export default function Navbar() {
                 key={path.href}
                 isActive={path.href === pathname}
                 Picture={path.Picture}
+                disabled={index > currentIndex}
               />)
           })
         }

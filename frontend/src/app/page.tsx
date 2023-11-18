@@ -14,7 +14,7 @@ export default function Home() {
           />
         </div>
       </section>
-      <section className='basis-3/5'>
+      <section className='basis-3/5 bg-view-main'>
         <FindBest />
       </section>
     </div>
