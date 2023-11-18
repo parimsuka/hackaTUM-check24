@@ -34,12 +34,17 @@ export default function ShowExpertsMap(){
             zoom: zoom
         });
         markers.map((value,index) => {
-            new maptilersdk.Marker({color: "#013474"})
+            new maptilersdk.Marker({color:"#013474"})
                 .setLngLat([value.lng,value.lat])
+                .setPopup(new maptilersdk.Popup().setHTML("&lt;h1&gt;Hello World!&lt;/h1&gt;"))
                 .addTo(map.current as maptilersdk.Map);
         })
 
     }, [munich.lng, munich.lat, zoom]);
+
+
+
+
     return(
             <div className="bg-view-main">
                 <div className="pl-[4rem] pt-[2rem] w-full h-full">
