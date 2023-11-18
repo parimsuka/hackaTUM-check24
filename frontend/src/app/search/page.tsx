@@ -5,6 +5,7 @@ import Image from "next/image";
 import mapIcon from '@/assets/MapView.svg';
 import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
+import Navbar from "@/components/NavBar";
 
 export default function Home() {
     const craftmen = [
@@ -31,33 +32,7 @@ export default function Home() {
     return (
         <div className="flex bg-view-main min-h-full w-full">
             <div className="px-16 py-28 w-full">
-                <div className="flex place-content-between">
-                    <div>
-                        <h3 className="font-semibold mb-4">
-                            Hello citizen, from
-                        </h3>
-                        <h5 className="font-bold text-2xl">
-                            Rosenheim, Kapuzinerweg 4
-                        </h5>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6">
-                        <Link href={"/search"}>
-                            <div className=" w-[40px] h-[40px] flex  bg-text-secondary">
-                                <Image className="m-auto" alt={"List Icon"} src={listIcon}/>
-                            </div>
-                        </Link>
-
-                        <Link href={"/map"}>
-                            <div className="cursor-pointer bg-button-main flex w-[40px] h-[40px]">
-
-                                <Image className="m-auto" alt={"Map Icon"} src={mapIcon}/>
-                            </div>
-                        </Link>
-                    </div>
-
-                </div>
-
+              <Navbar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
                 <div className="pl-8 mt-16">
                     <ul className="grid gap-y-20">
                         {craftmen.map((value, index) => {

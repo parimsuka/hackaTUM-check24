@@ -3,6 +3,7 @@ import  "@/../maps.css";
 import React, { useRef, useEffect, useState } from 'react';
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
+import Navbar from "@/components/NavBar";
 export default function ShowExpertsMap(){
     const [markers, setMarkers] = useState([
         {
@@ -28,7 +29,7 @@ export default function ShowExpertsMap(){
 
         map.current = new maptilersdk.Map({
             container: mapContainer.current ?? '',
-            style: maptilersdk.MapStyle.STREETS,
+            style: "dataviz",
             center: [munich.lng, munich.lat],
             zoom: zoom
         });
@@ -40,11 +41,12 @@ export default function ShowExpertsMap(){
 
     }, [munich.lng, munich.lat, zoom]);
     return(
-            <div className="bg-view-main h-full w-full">
-                <div className="w-full h-full">
-                    <div className="map-wrap">
-                        <div ref={mapContainer} className="map" />
-                    </div>
+            <div className="bg-view-main">
+                <div className="pl-[4rem] pt-[2rem] w-full h-full">
+                    <Navbar greetings="Hello citizen" message="Meet local expertise in Maps"/>
+                </div>
+                <div className="map-wrap rounded-2xl p-[4rem]">
+                    <div ref={mapContainer} className="map" />
                 </div>
             </div>
          );
