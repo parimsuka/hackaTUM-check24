@@ -18,13 +18,17 @@ class CraftsmenRankingResource(Resource):
         self.apc = apc
         self.asp = asp
         self.gba = gba
+        
+        # Needed for further asking the same postcode
+        self.i_th = 0
+        self.last_requested = -1
 
     def get(self, postcode):
         craftsmen = self.get_craftsmen_ranking(postcode)
         return jsonify({"postcode": postcode, "craftsmen": craftsmen})
 
     def pre_process(self):
-        for postcode in tqdm([pc.postcode for pc in apc.postcodes[:1]]):
+        for postcode in tqdm([pc.postcode for pc in apc.postcodes]):
             craftsmen = []
             vertex = gba.id_to_vertex(postcode, True)
             for edge in self.gba.graph.es[self.gba.graph.incident(vertex)]:
@@ -39,8 +43,19 @@ class CraftsmenRankingResource(Resource):
         time.sleep(1)
         return craftsman_dict
 
-    def get_craftsmen_ranking(self, postcode):
-        return craftsman_dict[postcode][:20]
+    def get_craftsmen_ranking(self, postcode, update_size=20):
+        if self.last_requested != postcode:
+            self.i_th = 0
+            self.last_requested = postcode
+        list_length = len(craftsman_dict[postcode])
+        starting_index = self.i_th * update_size
+        if starting_index >= list_length:
+            return []
+        self.i_th += 1
+        end_index = starting_index + update_size
+        if end_index > list_length:
+            end_index = list_length
+        return craftsman_dict[postcode][starting_index:end_index]
 
     def patch(self, craftsman_id):
         patch_request = request.get_json()
