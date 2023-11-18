@@ -1,5 +1,6 @@
 import RankingIcon from '@/assets/ranking.svg'
 import Image from "next/image";
+import Avatar from "@/components/avatar";
 
 export default function ListItem(props: {
   name: string,
@@ -9,8 +10,7 @@ export default function ListItem(props: {
   return (
     <li className="flex gap-9 p-4 hover:transition-all hover:rounded-2xl hover:bg-background">
       <div>
-        <div className="bg-black w-[3.9rem] h-[4.5rem]">
-        </div>
+        <Avatar />
       </div>
       <div className="grid grow">
         <div className='flex justify-between'>
