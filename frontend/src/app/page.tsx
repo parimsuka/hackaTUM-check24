@@ -1,6 +1,7 @@
 import Image from "next/image";
 import artisan from '@/assets/artisan.jpg'
 import check24 from '@/assets/check-24.png'
+import FindBest from "@/components/find-best";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
         </ul>
         <p>Made with code</p>
       </section>
-      <section className='basis-1/6'>
+      <section className='basis-2/6'>
         <div className='h-full'>
           <Image
             src={artisan}
@@ -22,7 +23,9 @@ export default function Home() {
           />
         </div>
       </section>
-      <section className='basis-2/3'></section>
+      <section className='basis-2/3'>
+        <FindBest />
+      </section>
     </main>
   )
 }
