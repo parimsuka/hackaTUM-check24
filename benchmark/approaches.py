@@ -28,16 +28,44 @@ class GraphBasedApproach():
         if not is_postcode:
             return -self.v_to_id[vertex]
         return self.v_to_id[vertex]
+    
+    def update_vertex(self, vertex):
+        updated_vertices = self.graph_approach.graph.neighbors(vertex)
+        connected_edges = self.graph_approach.graph.es[self.graph_approach.graph.incident(vertex)]
+        # Leave one edge in the graph to not drop node
+        # Then remove all others
+        self.graph.delete_edges(connected_edges[1:])
+
+        # Then insert one new edge
+        new_edges = self.update_weights(self.all_service_providers.service_providers[self.vertex_to_id(vertex, False)])
+        first_edges = new_edges[:2]
+        # Then remove the old edge
+        self.graph.add_edges(first_edges)
+        self.graph.delete_edges([connected_edges[0]])
+        self.graph.add_edges(first_edges)
+
+        # Then insert all other edges
+        self.graph.add_edges(new_edges[2:])
+
+        # Save a list on every edge that was updated
+        updated_postcodes = {self.vertex_to_id(v, True) for v in updated_vertices}
+        updated_postcodes = updated_postcodes.union({sp_id for _, sp_id, _ in new_edges})
+        return list(updated_postcodes)
+
+    def update_weights(self, service_provider):
+        edges = []
+        service_provider_id = service_provider.id
+        for postcode in self.all_postcodes:
+            postcode_id = postcode.postcode
+            if service_provider.can_reach(postcode):
+                edges.append((self.id_to_vertex(postcode_id, True),
+                              self.id_to_vertex(service_provider_id, False),
+                              service_provider.rank(postcode)))
+        return edges
 
     def fill_edges(self):
         edges = [(i, i+1, -100_000) for i in range(len(self.all_postcodes)+len(self.all_service_providers)-1)]
-        for postcode in tqdm(self.all_postcodes):
-            postcode_id = postcode.postcode
-            for service_provider in self.all_service_providers:
-                service_provider_id = service_provider.id
-                if service_provider.can_reach(postcode):
-                    edges.append((self.id_to_vertex(postcode_id, True),
-                                  self.id_to_vertex(service_provider_id, False),
-                                  service_provider.rank(postcode)))
+        for service_provider in tqdm(self.all_service_providers):
+            edges.append(self.update_weights(service_provider))
         self.graph = ig.Graph.TupleList(edges, directed=False, weights=True)
         self.graph.es.select(weight=-100_000).delete()

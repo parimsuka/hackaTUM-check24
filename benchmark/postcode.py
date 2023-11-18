@@ -17,12 +17,16 @@ class AllPostCodes():
     
     def __init__(self, post_code_file):
         self.postcodes = self.parse_post_codes(post_code_file)
+        self.indices = dict()
+    
+    def get_postcode(self, postcode: int):
+        return self.indices[postcode]
 
     def parse_post_codes(self, filename):
         with open(filename, 'r') as postcodefile:
             postcodelist = json.load(postcodefile)
             postcodes = []
-            for postcode in postcodelist:
+            for i, postcode in enumerate(postcodelist):
                 code = int(postcode['postcode'])
                 lon = float(postcode['lon'])
                 lat = float(postcode['lat'])
@@ -30,6 +34,7 @@ class AllPostCodes():
                 distance_group = postcode['postcode_extension_distance_group']
                 pc = PostCode(code, coordinates, distance_group)
                 postcodes.append(pc)
+                self.indices[postcode] = i
         return postcodes
     
     def __iter__(self):
