@@ -1,8 +1,9 @@
 
-import rankingIcon from '../assets/ranking.svg'
+import rankingIcon from '@/assets/ranking.svg'
 import Image from "next/image";
-import locationIcon from '../assets/ranking.svg';
-export default function Listitem(props: {
+import locationIcon from '@/assets/ranking.svg';
+
+export default function ListItem(props: {
     name:string,
     ranking:number,
     address:string,
