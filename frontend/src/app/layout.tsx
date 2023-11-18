@@ -5,7 +5,7 @@ import {ReactNode} from "react";
 import classNames from "classnames";
 import Navbar from "@/components/navbar";
 
-const poppins = Poppins({ weight: ['400', '500', '700'], subsets: ['latin', 'latin-ext', 'devanagari'] })
+const poppins = Poppins({ weight: ['400', '500', '600', '700'], subsets: ['latin', 'latin-ext', 'devanagari'] })
 
 export const metadata: Metadata = {
   title: 'Check24 Artisan\'s',

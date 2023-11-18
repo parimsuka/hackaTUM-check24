@@ -1,6 +1,5 @@
 import Image from "next/image";
 import artisan from '@/assets/artisan.jpg'
-import check24 from '@/assets/check-24.png'
 import FindBest from "@/components/find-best";
 
 export default function Home() {
