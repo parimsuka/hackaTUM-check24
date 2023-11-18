@@ -16,8 +16,8 @@ class PostCode():
 class AllPostCodes():
     
     def __init__(self, post_code_file):
-        self.postcodes = self.parse_post_codes(post_code_file)
         self.indices = dict()
+        self.postcodes = self.parse_post_codes(post_code_file)
     
     def get_postcode(self, postcode: int):
         return self.indices[postcode]
@@ -34,7 +34,7 @@ class AllPostCodes():
                 distance_group = postcode['postcode_extension_distance_group']
                 pc = PostCode(code, coordinates, distance_group)
                 postcodes.append(pc)
-                self.indices[postcode] = i
+                self.indices[code] = i
         return postcodes
     
     def __iter__(self):
