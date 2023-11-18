@@ -18,7 +18,11 @@ const config: Config = {
           secondary: '#F4F4F4',
         },
         background: '#D9ECD9',
-        button: '#013474',
+        button: {
+          text: '#525652',
+          main:'#013474',
+          secondary:'#F8DB95'
+        },
         gray: '#D9D9D9',
       },
       backgroundImage: {
