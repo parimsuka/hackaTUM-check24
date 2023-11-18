@@ -94,8 +94,8 @@ class CraftsmenRankingResource(Resource):
 
 
 if __name__ == '__main__':
-    apc = AllPostCodes('dataset/postcode.json')
-    asp = AllServiceProviders('dataset/service_provider_profile.json', 'dataset/quality_factor_score.json')
+    apc = AllPostCodes('../dataset/postcode.json')
+    asp = AllServiceProviders('../dataset/service_provider_profile.json', '../dataset/quality_factor_score.json')
     gba = GraphBasedApproach(asp.service_providers, apc.postcodes)
 
     api.add_resource(CraftsmenRankingResource, '/craftsmen', resource_class_kwargs={'all_post_codes': apc, 'all_service_providers': asp, 'graph_approach': gba})
