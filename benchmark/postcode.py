@@ -7,7 +7,11 @@ class PostCode():
     def __init__(self, postcode, lon, lat, distance_group) -> None:
         self.postcode = postcode
         self.coordinates = Coordinates(lat=lat, lon=lon)
-        self.distance_group = distance_group
+        self.distance_bonus = 0
+        if distance_group == 'group_b':
+            self.distance_bonus = -2000
+        elif distance_group == 'group_c':
+            self.distance_bonus = -5000
 
 class AllPostCodes():
     

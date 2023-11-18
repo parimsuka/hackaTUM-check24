@@ -3,7 +3,7 @@ from coordinates import Coordinates
 
 
 class ServiceProvider():
-    
+
     def __init__(self, id, lon, lat, max_driving_distance, picture_score, description_score) -> None:
         self.id = id
         self.coordinates = Coordinates(lat, lon)
@@ -15,19 +15,22 @@ class ServiceProvider():
     def init_profile_score(self):
         self.profile_score = 0.4*self.picture_score + 0.6*self.description_score
 
-    def can_reach(self, coordinates, group_bonus):
+    def can_reach(self, postcode):
+        coordinates = postcode.coordinates
+        group_bonus = postcode.distance_bonus
         distance = self.coordinates.distance_to(coordinates) + group_bonus
         return distance <= self.max_driving_distance
 
-    def rank(self, coordinates):
-        distance = self.coordinates.distance_to(coordinates)
+    def rank(self, postcode):
+        coordinates = postcode.coordinates
+        distance = self.coordinates.distance_to(coordinates) / 1000
         default_distance = 80
         distance_score = 1 - (distance/default_distance)
         distance_weight = 0.01 if distance > default_distance else 0.15
         return distance_weight * distance_score + (1 - distance_weight) * self.profile_score
 
 class AllServiceProviders():
-    
+
     def __init__(self, service_provider_filename, quality_filename):
         self.service_providers = self.parse_service_providers(service_provider_filename, quality_filename)
 
@@ -52,7 +55,7 @@ class AllServiceProviders():
                 sp = ServiceProvider(id, lon, lat, max_driving_distance, picture_score, description_score)
                 service_providers.append(sp)
         return service_providers
-    
+
     def __iter__(self):
         for service_provider in self.service_providers:
             yield service_provider
