@@ -1,18 +1,19 @@
+"use client"
 import ListItem from "@/components/listItem";
-import {AppResponse, CraftsmanResponse} from "@/types/utils";
+import {getCraftsmen} from "@/http/requests";
+import LoadMoreButton from "@/components/load-more-button";
+import useSWR from "swr";
 
-
-export async function  getCraftsmen() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/get-data`)
-  const jsonData = await data.json() as AppResponse<CraftsmanResponse, boolean>
-  if ("error" in jsonData) {
-    throw new Error(`Request could not be completed. Please check the endpoint. Error ${jsonData.error}`)
+export default function Home() {
+  const { data, error, mutate, isLoading  } = useSWR('/api/get-data', getCraftsmen)
+  const loadMoreData = async () => {
+    await mutate()
   }
-  return jsonData.data.craftsmen
-}
 
-export default async function Home() {
-  const craftsmen = await getCraftsmen()
+  if (error || isLoading) {
+    return null
+  }
+
   return (
     <div className="flex bg-view-main min-h-full w-full">
       <div className="px-16 py-28 w-full">
@@ -24,7 +25,7 @@ export default async function Home() {
             </h5>
         <div className="mt-16">
           <ul className="grid gap-y-10">
-            {craftsmen.map((value, index) => {
+            {data?.map((value, index) => {
               return (
                 <ListItem
                   name={value.name}
@@ -36,10 +37,7 @@ export default async function Home() {
           </ul>
         </div>
         <div style={{textAlignLast: "center"}} className="mt-[5.8rem]">
-          <button
-            className="bg-button-secondary  text-button-text rounded-[12px] w-[22.625rem] h-[4.5rem]">
-            Load More
-          </button>
+          <LoadMoreButton text={'Load More'} onClick={loadMoreData} />
         </div>
       </div>
     </div>
