@@ -12,7 +12,7 @@ export default function NavBar(props:{
     return (
         <div className="flex place-content-between">
             <div>
-                <h3 className="font-semibold mb-4">
+                <h3 className="font-semibold mb-4 text-text-main">
                     {props.greetings}
                 </h3>
                 <h5 className="font-bold text-2xl">
