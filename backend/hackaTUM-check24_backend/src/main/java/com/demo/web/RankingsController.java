@@ -2,16 +2,15 @@ package com.demo.web;
 
 import com.demo.model.*;
 import com.demo.service.RankingService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@EnableCaching
 @RestController
 @RequestMapping(value = "/rankings")
 public class RankingsController {
@@ -40,10 +39,10 @@ public class RankingsController {
         return ResponseEntity.ok(patchResponse);
     }
 
+    @Cacheable(value="topNRankingsCache", key = "#postalcode", unless = "#result == null")
     @GetMapping("/craftsmen")
     public ResponseEntity<Response> getTopNRankings(
             @RequestParam String postalcode) {
-
         List<Craftsman> topRankings = rankingService.getTopNRankings(postalcode, 20);
         Response response = new Response(topRankings);
         return ResponseEntity.ok(response);
