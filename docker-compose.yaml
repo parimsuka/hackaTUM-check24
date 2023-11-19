@@ -6,7 +6,7 @@ services:
       context: benchmark
       dockerfile: Dockerfile
     ports:
-      - 3000:5000
+      - 3000:3000
   frontend:
     build:
       context: frontend

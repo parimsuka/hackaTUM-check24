@@ -133,4 +133,4 @@ if __name__ == '__main__':
     gba = GraphBasedApproach(asp.service_providers, apc.postcodes)
 
     crr = CraftsmenRankingResource(apc, asp, gba)
-    app.run()
+    app.run(port=3000)
