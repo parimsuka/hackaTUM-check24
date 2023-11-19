@@ -20,7 +20,7 @@ export default function Home() {
   }) =>  await trigger(data)
 
   useEffect(() => {
-    patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
+    // patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
     console.log("here")
   },[])
   patchData({
