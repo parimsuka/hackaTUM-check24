@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div className="flex bg-view-main min-h-full w-full">
       <div className="px-16 py-12 w-full">
-        <Navbar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
+        <Navbar greetings="Hello citizen, from München" message="Meet local expertise"/>
         <div className="mt-16 flex-1 h-[70vh]">
           <AutoSizer >
             {
