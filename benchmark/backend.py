@@ -7,6 +7,7 @@ import bisect
 from tqdm import tqdm
 import time
 import os
+import traceback
 
 app = Flask(__name__)
 api = Api(app)
@@ -104,7 +105,8 @@ class CraftsmenRankingResource(Resource):
             updated_postcodes = self.graph_approach.update_vertex(craftsman_vertex)
             self.update_cache(craftsman_id, updated_postcodes)
         except KeyError:
-            return jsonify({"error": f"No such craftsman_id: {craftsman_vertex}"}), 400
+            traceback.print_exc()
+            return jsonify({"Error": f"No such craftsman_id: {craftsman_vertex}"}), 400
         return jsonify({"id": craftsman_id, "updated": patch_request})
 
     def update_cache(self, craftsman_id, updated_postcodes):
