@@ -33,3 +33,20 @@ export async function getCraftsmen (url: string) {
   }
   return jsonData.data.craftsmen
 }
+type UpdateCraftmanInfo = {
+  maxDrivingDistance?: number;
+  profilePictureScore?: number;
+  profileDescriptionScore?: number;
+}
+
+export async function updateCraftman (url: string, { arg }: { arg: UpdateCraftmanInfo }) {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}${url}`, {
+    method:'PATCH',
+    body:JSON.stringify(arg)
+  })
+  const jsonData = await data.json() as AppResponse<CraftsmanResponse, boolean>
+  if ("error" in jsonData) {
+    throw new Error(`Request could not be completed. Please check the endpoint. Error ${jsonData.error}`)
+  }
+  return jsonData.data.craftsmen
+}
