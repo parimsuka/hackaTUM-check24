@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={classNames(poppins.className, 'bg-background')}>
       <main className="flex">
         <div className="w-1/6 p-4 sticky top-0 h-screen">
-          <SideNavbar/>
+          <SideNavBar/>
         </div>
         <div className="w-5/6">
           {children}

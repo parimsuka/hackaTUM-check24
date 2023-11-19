@@ -36,7 +36,7 @@ export default function SideNavbar() {
         {
           paths.map((path, index) => {
             return (
-              <NavbarItem
+              <NavBarItem
                 text={path.text}
                 href={path.href}
                 key={path.href}

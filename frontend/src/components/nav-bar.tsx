@@ -3,7 +3,7 @@ import '@/../navbar.css';
 import Link from "next/link";
 import Image from "next/image";
 import ListIcon from "@/assets/ListView.svg";
-import MapIcon from "@/assets/MapView.svg";
+import MapIcon from "@/assets/map-view.svg";
 
 export default function NavBar(props:{
     greetings:string,

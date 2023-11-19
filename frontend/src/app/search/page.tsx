@@ -2,7 +2,7 @@
 import ListItem from "@/components/listItem";
 import {getCraftsmen} from "@/http/requests";
 import LoadMoreButton from "@/components/load-more-button";
-import Navbar from "@/components/NavBar";
+import Navbar from "@/components/nav-bar";
 import useSWR from "swr";
 
 export default function Home() {
