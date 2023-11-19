@@ -5,9 +5,11 @@ import Navbar from "@/components/nav-bar";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import {AutoSizer, List, ScrollParams} from "react-virtualized"
-import { useSearchParams } from "next/navigation";
+import {redirect, useSearchParams} from "next/navigation";
 import {Craftsman} from "@/types/utils";
 import {useLoadMoreOnScroll} from "@/hooks/useLoadMoreOnScroll";
+import {useEffect} from "react";
+import {router} from "next/client";
 
 export default function Home() {
   const params = useSearchParams()
@@ -19,6 +21,12 @@ export default function Home() {
     await mutate()
   }
   const onScroll = useLoadMoreOnScroll(() => loadMoreData())
+
+  useEffect(() => {
+    if (!postalCode) {
+      redirect('/error')
+    }
+  }, []);
 
   if (error || isLoading) {
     return null

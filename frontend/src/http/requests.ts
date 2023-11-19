@@ -24,6 +24,9 @@ export async function sendPostalCode(postalCode:string){
 
 
 export async function getCraftsmen (url: string, postalCode: string, craftsmen?: Craftsman[]) {
+  if (!postalCode) {
+    throw new Error(`Request could not be completed. Postal code is required for this operation`)
+  }
   const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/${url}?postalCode=${postalCode}`, {
     method:'GET',
   })
