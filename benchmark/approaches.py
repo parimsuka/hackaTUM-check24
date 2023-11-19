@@ -70,7 +70,7 @@ class GraphBasedApproach():
         edges, weights = [], {'weight': []}
         for service_provider in tqdm(self.all_service_providers):
             new_edges, new_weights = self.update_weights(service_provider)
-            edges.append(new_edges)
+            edges += new_edges
             weights['weight'] += new_weights['weight']
         self.graph.add_edges(edges, attributes=weights)
         self.graph.es.select(weight=-100_000).delete()
