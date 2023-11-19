@@ -6,11 +6,14 @@ from approaches import GraphBasedApproach
 import bisect
 from tqdm import tqdm
 import time
+import json
 import os
 import traceback
+from threading import Thread, Lock
 
 app = Flask(__name__)
 api = Api(app)
+mutex = Lock()
 
 
 # API endpoints
@@ -29,8 +32,15 @@ def answer_craftsmen():
 
 @app.route("/craftman/<id>", methods=['PATCH'])
 def update_craftsmen(id):
+    # TODO: Have more than one possible at the same time
     id = int(id)
-    return crr.update_craftsman(id, request.json)
+    thread = Thread(target=threaded_update, args=(id, request.json))
+    thread.start()
+    return crr.update_craftsman_response(id, request.json)
+
+
+def threaded_update(id, json):
+    crr.update_craftsman_threaded(id, json)
 
 
 class CraftsmenRankingResource(Resource):
@@ -70,12 +80,26 @@ class CraftsmenRankingResource(Resource):
             # craftsmen = [craftsman for craftsman, _ in craftsmen]
             craftsman_dict[postcode] = craftsmen
         self.craftsman_dict = craftsman_dict
+        self.craftsman_dict_to_disc()
+
+    def craftsman_dict_to_disc(self):
+        for postcode, craftsmen in self.craftsman_dict.items():
+            with open(f'{postcode}', 'w') as postcodefile:
+                json.dump(craftsmen, postcodefile)
+    
+    def craftsmen_from_disc(self, postcode):
+        mutex.acquire()
+        with open(f'{postcode}', 'r') as postcodefile:
+            data = json.load(postcodefile)
+        mutex.release()
+        return data
 
     def get_craftsmen_ranking(self, postcode, update_size=20):
         if self.last_requested != postcode:
             self.i_th = 0
             self.last_requested = postcode
-        list_length = len(self.craftsman_dict[postcode])
+        craftsman_dict_list = self.craftsmen_from_disc(postcode)
+        list_length = len(craftsman_dict_list)
         starting_index = self.i_th * update_size
         if starting_index >= list_length:
             return []
@@ -83,7 +107,7 @@ class CraftsmenRankingResource(Resource):
         end_index = starting_index + update_size
         if end_index > list_length:
             end_index = list_length
-        return self.craftsman_dict[postcode][starting_index:end_index]
+        return craftsman_dict_list[starting_index:end_index]
 
     def patch(self, craftsman_id):
         patch_request = request.get_json()
@@ -93,7 +117,7 @@ class CraftsmenRankingResource(Resource):
         response = self.update_craftsman(craftsman_id, patch_request)
         return response
 
-    def update_craftsman(self, craftsman_id, patch_request):
+    def update_craftsman_threaded(self, craftsman_id, patch_request):
         try:
             craftsman_vertex = self.graph_approach.id_to_vertex(craftsman_id, False)
             craftsman = self.all_service_providers.service_providers[craftsman_id-1]
@@ -109,21 +133,48 @@ class CraftsmenRankingResource(Resource):
             updated_postcodes = self.graph_approach.update_vertex(craftsman_vertex)
             self.update_cache(craftsman_id, updated_postcodes)
         except KeyError:
-            traceback.print_exc()
-            return jsonify({"Error": f"No such craftsman_id: {craftsman_vertex}"}), 400
+            # TODO: Forward error to API consumer
+            pass
+
+    def update_craftsman_response(self, craftsman_id, patch_request):
         return jsonify({"id": craftsman_id, "updated": patch_request})
+    
+    def remove_craftsman_from_disk(self, postcode, craftsman_id):
+        mutex.acquire()
+        with open(f'{postcode}', 'r') as postcodefile:
+            craftsman_list = json.load(postcodefile)
+        with open(f'{postcode}', 'w') as postcodefile:
+            try:
+                craftsman_list.remove(craftsman_id)
+            except:
+                pass
+            json.dump(craftsman_list, postcodefile)
+        mutex.release()
+
+    def add_craftsman_to_disk(self, postcode, crafts_weight):
+        mutex.acquire()
+        try:
+            with open(f'{postcode}', 'r') as postcodefile:
+                craftsman_list = json.load(postcodefile)
+            bisect.insort(craftsman_list, crafts_weight, key=lambda x: -x[1])
+            with open(f'{postcode}', 'w') as postcodefile:
+                json.dump(craftsman_list, postcodefile)
+        except:
+            pass
+        mutex.release()
 
     def update_cache(self, craftsman_id, updated_postcodes):
         craftsman_vertex = self.graph_approach.id_to_vertex(craftsman_id, False)
         for postcode in updated_postcodes:
             postcode_vertex = self.graph_approach.id_to_vertex(postcode, True)
             try:
-                self.craftsman_dict[postcode].remove(craftsman_id)
+                self.remove_craftsman_from_disk(postcode, craftsman_id)
             except ValueError:
                 pass
             if self.graph_approach.graph.are_connected(craftsman_vertex, postcode_vertex):
-                crafts_weight = self.graph[craftsman_vertex, postcode_vertex]
-                bisect.insort(self.craftsman_dict[postcode], crafts_weight, key=lambda x: -x[1])
+                weight = self.graph[craftsman_vertex, postcode_vertex]
+                crafts_weight = (craftsman_id, weight)
+                self.add_craftsman_to_disk(postcode, crafts_weight)
 
 
 if __name__ == '__main__':
