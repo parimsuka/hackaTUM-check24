@@ -11,6 +11,7 @@ COPY package-lock.json ./
 # Trick, to have higher build speed
 RUN npm install -g pnpm
 RUN pnpm install
+RUN npm install -g next
 
 
 RUN mkdir -p /usr/src/app
