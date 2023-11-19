@@ -1,0 +1,7 @@
+jupyterlab==4.0.8
+geopy==2.4.0
+igraph==0.11.2
+scipy==1.11.3
+tqdm==4.66.1
+flask==3.0.0
+flask-restful==0.3.10

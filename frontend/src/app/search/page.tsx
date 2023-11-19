@@ -6,16 +6,18 @@ import Navbar from "@/components/nav-bar";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import {useEffect} from "react";
+import {AutoSizer, List} from "react-virtualized"
 
 export default function Home() {
   const { data, error, mutate, isLoading  } = useSWR('api/get-data', getCraftsmen);
   const { trigger  } = useSWRMutation('/search' , updateCraftman);
+  const rowHeight = 120
 
   const patchData = async (data:{
     maxDrivingDistance:number,
     profilePictureScore:number,
     profileDescriptionScore:number
-  }) =>  await trigger(data);
+  }) =>  await trigger(data)
 
   useEffect(() => {
     patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
@@ -25,7 +27,7 @@ export default function Home() {
     maxDrivingDistance:5,
     profileDescriptionScore:6,
     profilePictureScore:7
-  }).then((craftmen) => {console.log(55555)})
+  }).then((craftmen) => {console.log(craftmen[0])})
   const loadMoreData = async () => {
     await mutate()
   }
@@ -36,23 +38,23 @@ export default function Home() {
 
   return (
     <div className="flex bg-view-main min-h-full w-full">
-      <div className="px-16 py-28 w-full">
+      <div className="px-16 py-12 w-full">
         <Navbar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
-        <div className="mt-16">
-          <ul className="grid gap-y-10">
-            {data?.map((value, index) => {
-              return (
-                <ListItem
-                  name={value.name}
-                  key={index}
-                  ranking={value.rankingScore}
+        <div className="mt-16 flex-1 h-[70vh]">
+          <AutoSizer>
+            {
+              (({ width, height }) => (
+                <List
+                  width={width}
+                  height={height}
+                  rowHeight={rowHeight}
+                  rowRenderer={(props) => <ListItem data={data![props.index]} {...props} key={props.key} />}
+                  rowCount={data?.length ?? 0}
+                  overscanRowCount={3}
                 />
-              )
-            })}
-          </ul>
-        </div>
-        <div style={{textAlignLast: "center"}} className="mt-[5.8rem]">
-          <LoadMoreButton text={'Load More'} onClick={loadMoreData} />
+              ))
+            }
+          </AutoSizer>
         </div>
       </div>
     </div>

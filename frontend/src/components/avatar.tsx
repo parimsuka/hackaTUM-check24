@@ -1,5 +1,6 @@
 import ManAvatar from '@/assets/man-avatar.svg'
 import classNames from "classnames";
+import {useMemo} from "react";
 
 
 const Avatar = () => {
@@ -9,7 +10,7 @@ const Avatar = () => {
   const gradFour = 'bg-gradient-to-r from-cyan-500 to-blue-500'
 
   const grads = [gradOne, gradTwo, gradThree, gradFour]
-  const randomGradIdx = Math.floor(Math.random() * grads.length)
+  const randomGradIdx = useMemo(() => Math.floor(Math.random() * grads.length), [])
   return (
     <div className={classNames('w-[82px] h-[82px] flex items-center justify-center', grads[randomGradIdx])}>
       <ManAvatar />
