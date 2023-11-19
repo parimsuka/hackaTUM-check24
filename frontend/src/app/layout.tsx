@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
-import './globals.css'
+import '@/styles/globals.css'
 import {ReactNode} from "react";
 import classNames from "classnames";
 import SideNavBar from "@/components/side-nav-bar";
@@ -21,10 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={classNames(poppins.className, 'bg-background')}>
       <main className="flex">
-        <div className="w-1/4 p-4 sticky top-0 h-screen">
-          <SideNavBar/>
+        <div className="w-1/6 p-4 sticky top-0 h-screen">
+          <SideNavbar/>
         </div>
-        <div className="w-3/4">
+        <div className="w-5/6">
           {children}
         </div>
       </main>
