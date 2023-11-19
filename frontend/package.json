@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.2",
     "@maptiler/sdk": "^1.2.0",
     "@react-google-maps/api": "^2.19.2",
     "@svgr/webpack": "^8.1.0",

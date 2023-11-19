@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import check24 from "@/assets/check-24.png";
-import NavbarItem, {NavbarElement} from "@/components/NavbarItem";
+import NavBarItem, {NavbarElement} from "@/components/nav-bar-item";
 import {usePathname, useRouter} from "next/navigation";
 import Search from '@/assets/search.svg';
 import Address from '@/assets/address.svg'
@@ -36,7 +36,7 @@ export default function SideNavbar() {
         {
           paths.map((path, index) => {
             return (
-              <NavbarItem
+              <NavBarItem
                 text={path.text}
                 href={path.href}
                 key={path.href}
