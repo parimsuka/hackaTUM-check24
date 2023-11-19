@@ -5,7 +5,7 @@ import Image from "next/image";
 import mapIcon from '@/assets/MapView.svg';
 import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
-import Navbar from "@/components/NavBar";
+import NavBar from "@/components/nav-bar";
 
 export default function Home() {
     const craftmen = [
@@ -32,7 +32,7 @@ export default function Home() {
     return (
         <div className="flex bg-view-main min-h-full w-full">
             <div className="px-16 py-28 w-full">
-              <Navbar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
+              <NavBar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
                 <div className="pl-8 mt-16">
                     <ul className="grid gap-y-20">
                         {craftmen.map((value, index) => {

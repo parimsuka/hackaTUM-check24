@@ -1,12 +1,11 @@
 "use client"
 import Image from "next/image";
 import check24 from "@/assets/check-24.png";
-import NavbarItem, {NavbarElement} from "@/components/NavbarItem";
+import NavBarItem, {NavbarElement} from "@/components/nav-bar-item";
 import {usePathname, useRouter} from "next/navigation";
-import Link from "next/link";
 
 
-export default function SideNavbar() {
+export default function SideNavBar() {
   const pathname = usePathname()
   const router = useRouter()
   const paths: NavbarElement[] = [{href: '/', text: 'Address'}, {href: '/search', text: 'Search'}];
@@ -20,7 +19,7 @@ export default function SideNavbar() {
         <ul className="grid grid-cols-1 gap-y-10">
           {
             paths.map((path) => {
-              return (<NavbarItem text={path.text} href={path.href} key={path.href} isActive={path.href === pathname}/>)
+              return (<NavBarItem text={path.text} href={path.href} key={path.href} isActive={path.href === pathname}/>)
             })
           }
         </ul>

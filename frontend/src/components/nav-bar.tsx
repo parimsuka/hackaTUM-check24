@@ -5,7 +5,7 @@ import Image from "next/image";
 import listIcon from "@/assets/ListView.svg";
 import mapIcon from "@/assets/MapView.svg";
 
-export default function Navbar(props:{
+export default function NavBar(props:{
     greetings:string,
     message:string
 }){
