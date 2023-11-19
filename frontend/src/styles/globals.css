@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @import "navbar.css";
+@import "maptiler.css";
+@import "maps.css";
 
 
 

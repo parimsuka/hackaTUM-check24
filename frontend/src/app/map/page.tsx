@@ -1,11 +1,8 @@
 "use client"
-import "@/../maps.css";
 import React, {useRef, useEffect, useState} from 'react';
+import NavBar from "@/components/nav-bar";
 import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
-import NavBar from "@/components/nav-bar";
-import "@/../maptiler.css";
-// import workerSvg from "@/assets/worker.svg"
 
 
 export default function ShowExpertsMap() {

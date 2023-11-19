@@ -1,5 +1,4 @@
 import {NextApiRequest, NextApiResponse} from 'next';
-import {craftsmen} from "@/const/mock";
 
 interface ApiRequest extends NextApiRequest {
   query: {
