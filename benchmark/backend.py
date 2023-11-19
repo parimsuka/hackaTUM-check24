@@ -11,6 +11,23 @@ import os
 app = Flask(__name__)
 api = Api(app)
 
+@app.route("/craftsmen", methods=['GET'])
+def answer_craftsmen():
+    postalcode = request.args.get('postalcode')
+    if postalcode is None:
+        return jsonify({"error": "Missing request arguments"}), 400
+    if postalcode.startswith('{'):
+        postalcode = postalcode[1:]
+    if postalcode.endswith('}'):
+        postalcode = postalcode[:-1]
+    postcode = int(postalcode)
+    return crr.get(postcode)
+
+@app.route("/craftman/<id>", methods=['PATCH'])
+def update_craftsmen(id):
+    id = int(id)
+    return crr.update_craftsman(id, request.json)
+
 class CraftsmenRankingResource(Resource):
     def __init__(self, all_post_codes, all_service_providers, graph_approach):
         self.all_post_codes = all_post_codes
@@ -25,8 +42,15 @@ class CraftsmenRankingResource(Resource):
 
     def get(self, postcode):
         craftsmen = self.get_craftsmen_ranking(postcode)
-        return jsonify({"postcode": postcode, "craftsmen": craftsmen})
-
+        crafts_list = []
+        for id, rank in craftsmen:
+            crafts_list.append({
+                'id': id,
+                'name': self.all_service_providers.service_providers[id-1].name,
+                'rankingScore': rank
+            })
+        return jsonify(crafts_list)
+    
     def initialize_cache(self):
         craftsman_dict = dict()
         for postcode in tqdm([pc.postcode for pc in self.all_post_codes.postcodes]):
@@ -98,6 +122,5 @@ if __name__ == '__main__':
     asp = AllServiceProviders('../dataset/service_provider_profile.json', '../dataset/quality_factor_score.json')
     gba = GraphBasedApproach(asp.service_providers, apc.postcodes)
 
-    api.add_resource(CraftsmenRankingResource, '/craftsmen', resource_class_kwargs={'all_post_codes': apc, 'all_service_providers': asp, 'graph_approach': gba})
-
-    app.run(debug=True)
+    crr = CraftsmenRankingResource(apc, asp, gba)
+    app.run()

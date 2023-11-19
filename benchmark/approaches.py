@@ -30,14 +30,14 @@ class GraphBasedApproach():
         return self.v_to_id[vertex]
     
     def update_vertex(self, vertex):
-        updated_vertices = self.graph_approach.graph.neighbors(vertex)
-        connected_edges = self.graph_approach.graph.es[self.graph_approach.graph.incident(vertex)]
+        updated_vertices = self.graph.neighbors(vertex)
+        connected_edges = self.graph.es[self.graph.incident(vertex)]
         # Leave one edge in the graph to not drop node
         # Then remove all others
         self.graph.delete_edges(connected_edges[1:])
 
         # Then insert one new edge
-        new_edges, new_weights = self.update_weights(self.all_service_providers.service_providers[self.vertex_to_id(vertex, False)])
+        new_edges, new_weights = self.update_weights(self.all_service_providers[self.vertex_to_id(vertex, False)])
         first_edges, first_weights = new_edges[:2], new_weights['weight'][:2]
         # Then remove the old edge
         self.graph.add_edges(first_edges, attributes={'weight': first_weights})
