@@ -1,36 +1,24 @@
 "use client"
 import ListItem from "@/components/listItem";
 import {getCraftsmen,updateCraftman} from "@/http/requests";
-import LoadMoreButton from "@/components/load-more-button";
 import Navbar from "@/components/nav-bar";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import {useEffect} from "react";
-import {AutoSizer, List} from "react-virtualized"
+import {AutoSizer, List, ScrollParams} from "react-virtualized"
+import { useSearchParams } from "next/navigation";
+import {Craftsman} from "@/types/utils";
+import {useLoadMoreOnScroll} from "@/hooks/useLoadMoreOnScroll";
 
 export default function Home() {
-  const { data, error, mutate, isLoading  } = useSWR('api/get-data', getCraftsmen);
+  const params = useSearchParams()
+  const postalCode = params?.get('postalCode')
+  const { data, error, mutate, isLoading  } = useSWR('api/get-data', (url): Promise<Craftsman[]> => getCraftsmen(url, postalCode ?? '', data));
   const { trigger  } = useSWRMutation('/search' , updateCraftman);
   const rowHeight = 120
-
-  const patchData = async (data:{
-    maxDrivingDistance:number,
-    profilePictureScore:number,
-    profileDescriptionScore:number
-  }) =>  await trigger(data)
-
-  useEffect(() => {
-    patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
-    console.log("here")
-  },[])
-  patchData({
-    maxDrivingDistance:5,
-    profileDescriptionScore:6,
-    profilePictureScore:7
-  }).then((craftmen) => {console.log(craftmen[0])})
   const loadMoreData = async () => {
     await mutate()
   }
+  const onScroll = useLoadMoreOnScroll(() => loadMoreData())
 
   if (error || isLoading) {
     return null
@@ -41,10 +29,11 @@ export default function Home() {
       <div className="px-16 py-12 w-full">
         <Navbar greetings="Hello citizen, from Rosenheim" message="Meet local expertise"/>
         <div className="mt-16 flex-1 h-[70vh]">
-          <AutoSizer>
+          <AutoSizer >
             {
               (({ width, height }) => (
                 <List
+                 onScroll={onScroll}
                   width={width}
                   height={height}
                   rowHeight={rowHeight}
