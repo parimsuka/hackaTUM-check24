@@ -122,7 +122,8 @@ class CraftsmenRankingResource(Resource):
             except ValueError:
                 pass
             if self.graph_approach.graph.are_connected(craftsman_vertex, postcode_vertex):
-                crafts_weight = self.graph[craftsman_vertex, postcode_vertex]
+                weight = self.graph[craftsman_vertex, postcode_vertex]
+                crafts_weight = (craftsman_id, weight)
                 bisect.insort(self.craftsman_dict[postcode], crafts_weight, key=lambda x: -x[1])
 
 
