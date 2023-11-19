@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
-import Image from "next/image";
-import manAvatarSvg from "../assets/man-avatar.svg"
 import {useEffect, useState} from "react";
+import Avatar from "@/components/avatar";
 
 export default function ProfileForm(props:{x:number,y:number,offsetX:number}){
     const [user,setUser] = useState({
@@ -15,9 +14,12 @@ export default function ProfileForm(props:{x:number,y:number,offsetX:number}){
                 <div className="w-[324px] h-[382px] border-[1px] border-[#B4B4B4] rounded-2xl">
                     <div className="p-[3rem] grid">
                         <div className="flex flex-col gap-[3rem]">
-                        <div className="flex">
-                            <Image alt={"user"} src={manAvatarSvg}/>
-                            <h1>name</h1>
+                        <div className="flex justify-evenly">
+                            <Avatar/>
+                            <div>
+                                <h3 className="font-bold">{user.name}</h3>
+                                <h3 className="font-bold">{user.last}</h3>
+                            </div>
                         </div>
                         <div className="grid w-full gap-[2rem]">
                         <input onInput={(e) => {setUser({...user, name: (e.target as any).value})}} value={user.name} type={"input"}/>
