@@ -67,7 +67,11 @@ class GraphBasedApproach():
     def fill_edges(self):
         edges = [(i, i+1, -100_000) for i in range(len(self.all_postcodes)+len(self.all_service_providers)-1)]
         self.graph = ig.Graph.TupleList(edges, directed=False, weights=True)
+        edges, weights = [], {'weight': []}
         for service_provider in tqdm(self.all_service_providers):
-            edges, weights = self.update_weights(service_provider)
-            self.graph.add_edges(edges, attributes=weights)
+            new_edges, new_weights = self.update_weights(service_provider)
+            edges.append(new_edges)
+            weights['weight'].append(new_weights['weight'])
+            
+        self.graph.add_edges(edges, attributes=weights)
         self.graph.es.select(weight=-100_000).delete()
