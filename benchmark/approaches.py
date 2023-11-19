@@ -42,14 +42,14 @@ class GraphBasedApproach():
         # Then remove the old edge
         self.graph.add_edges(first_edges, attributes={'weight': first_weights})
         self.graph.delete_edges([connected_edges[0]])
-        self.graph.add_edges(first_edges, attributes=first_weights)
+        self.graph.add_edges(first_edges, attributes={'weight': first_weights})
 
         # Then insert all other edges
         self.graph.add_edges(new_edges[2:], attributes={'weight': new_weights['weight'][2:]})
 
         # Save a list on every edge that was updated
         updated_postcodes = {self.vertex_to_id(v, True) for v in updated_vertices}
-        updated_postcodes = updated_postcodes.union({sp_id for _, sp_id, _ in new_edges})
+        updated_postcodes = updated_postcodes.union({sp_id for _, sp_id in new_edges})
         return list(updated_postcodes)
 
     def update_weights(self, service_provider):

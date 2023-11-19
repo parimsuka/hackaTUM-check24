@@ -111,7 +111,10 @@ class CraftsmenRankingResource(Resource):
         craftsman_vertex = self.graph_approach.id_to_vertex(craftsman_id, False)
         for postcode in updated_postcodes:
             postcode_vertex = self.graph_approach.id_to_vertex(postcode, True)
-            self.craftsman_dict[postcode].pop(craftsman_id, None)
+            try:
+                self.craftsman_dict[postcode].remove(craftsman_id)
+            except ValueError:
+                pass
             if self.graph_approach.graph.are_connected(craftsman_vertex, postcode_vertex):
                 crafts_weight = self.graph[craftsman_vertex, postcode_vertex]
                 bisect.insort(self.craftsman_dict[postcode], crafts_weight, key=lambda x: -x[1])
