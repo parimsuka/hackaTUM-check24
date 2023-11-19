@@ -1,16 +1,16 @@
 version: '3.3'
 
 services:
-  backend:
+  benchmark:
     build:
       context: benchmark
-      dockerfile: benchmark/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - 3000:5000
   frontend:
     build:
       context: frontend
-      dockerfile: frontend/Dockerfile
+      dockerfile: Dockerfile
     environment:
       NEXT_PUBLIC_BACKEND: 'http://localhost:8051/'
       NEXT_PUBLIC_MAPS_API_KEY: 23Wx5lgtGMfDkfMkCuF1
