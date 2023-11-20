@@ -20,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={classNames(poppins.className, 'bg-background')}>
+      <div id="portal"></div>
       <main className="flex">
         <div className="w-1/6 p-4 sticky top-0 h-screen">
           <SideNavBar/>

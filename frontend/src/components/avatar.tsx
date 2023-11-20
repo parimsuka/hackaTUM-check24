@@ -13,7 +13,7 @@ const Avatar = () => {
   const randomGradIdx = useMemo(() => Math.floor(Math.random() * grads.length), [])
   return (
     <div className={classNames('w-[82px] h-[82px] flex items-center justify-center', grads[randomGradIdx])}>
-      <ManAvatar />
+      <ManAvatar/>
     </div>
   )
 }

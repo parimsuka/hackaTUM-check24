@@ -17,6 +17,23 @@ export default function Home() {
   const { data, error, mutate, isLoading  } = useSWR('api/get-data', (url): Promise<Craftsman[]> => getCraftsmen(url, postalCode ?? '', data));
   const { trigger  } = useSWRMutation('/search' , updateCraftman);
   const rowHeight = 120
+
+  const patchData = async (data:{
+    maxDrivingDistance:number,
+    profilePictureScore:number,
+    profileDescriptionScore:number
+  }) =>  await trigger(data)
+
+  useEffect(() => {
+    // patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
+    console.log("here")
+  },[])
+  patchData({
+    maxDrivingDistance:5,
+    profileDescriptionScore:6,
+    profilePictureScore:7
+  }).then((craftmen) => {console.log(craftmen[0])})
+
   const loadMoreData = async () => {
     await mutate()
   }
