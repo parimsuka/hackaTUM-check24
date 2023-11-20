@@ -2,7 +2,6 @@
 import LocationInput from "@/components/location-input";
 import GeoLocation from '@/assets/geo-location.svg'
 import {useState} from "react";
-import {sendPostalCode} from "@/http/requests";
 import {useRouter} from "next/navigation";
 
 const FindBest = () => {
@@ -10,8 +9,7 @@ const FindBest = () => {
   const router = useRouter()
 
   const onSendPostalCode = async () => {
-    await sendPostalCode(postalCode)
-    router.push('/search')
+    router.push(`/search?postalCode=${postalCode}`)
   }
 
   return (

@@ -12,6 +12,9 @@ import traceback
 app = Flask(__name__)
 api = Api(app)
 
+
+# API endpoints
+
 @app.route("/craftsmen", methods=['GET'])
 def answer_craftsmen():
     postalcode = request.args.get('postalcode')
@@ -28,6 +31,7 @@ def answer_craftsmen():
 def update_craftsmen(id):
     id = int(id)
     return crr.update_craftsman(id, request.json)
+
 
 class CraftsmenRankingResource(Resource):
     def __init__(self, all_post_codes, all_service_providers, graph_approach):
@@ -118,14 +122,15 @@ class CraftsmenRankingResource(Resource):
             except ValueError:
                 pass
             if self.graph_approach.graph.are_connected(craftsman_vertex, postcode_vertex):
-                crafts_weight = self.graph[craftsman_vertex, postcode_vertex]
+                weight = self.graph[craftsman_vertex, postcode_vertex]
+                crafts_weight = (craftsman_id, weight)
                 bisect.insort(self.craftsman_dict[postcode], crafts_weight, key=lambda x: -x[1])
 
 
 if __name__ == '__main__':
-    apc = AllPostCodes('../dataset/postcode.json')
-    asp = AllServiceProviders('../dataset/service_provider_profile.json', '../dataset/quality_factor_score.json')
+    apc = AllPostCodes('dataset/postcode.json')
+    asp = AllServiceProviders('dataset/service_provider_profile.json', 'dataset/quality_factor_score.json')
     gba = GraphBasedApproach(asp.service_providers, apc.postcodes)
 
     crr = CraftsmenRankingResource(apc, asp, gba)
-    app.run()
+    app.run(port=3000)

@@ -7,11 +7,18 @@ WORKDIR /usr/src/cache
 # Install the application's dependencies into the node_modules's cache directory.
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install
+
+# Trick, to have higher build speed
+RUN npm install -g pnpm
+RUN pnpm install
+RUN npm install -g next
+
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . ./
+
+RUN npm run build
 
 EXPOSE 80
 

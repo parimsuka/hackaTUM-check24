@@ -1,8 +1,13 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {craftsmen} from "@/const/mock";
 
-let repeat = 10;
-export default function handler(_: NextApiRequest, res: NextApiResponse) {
-  ++repeat;
-  res.send({ data: { craftsmen: craftsmen.craftsmen.flatMap(i => Array(repeat).fill(i))}, type: 'success' })
+interface ApiRequest extends NextApiRequest {
+  query: {
+    postalCode: string;
+  };
+}
+
+export default async function handler(req: ApiRequest, res: NextApiResponse) {
+  const data = await fetch(`http://localhost:5000/craftsmen?postalcode=${req.query.postalCode}`)
+  const craftsmen = await data.json()
+  res.send({ data: { craftsmen: craftsmen, type: 'success'} })
 }
