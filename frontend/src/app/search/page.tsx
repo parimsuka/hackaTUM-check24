@@ -10,13 +10,13 @@ import {Craftsman} from "@/types/utils";
 import {useLoadMoreOnScroll} from "@/hooks/useLoadMoreOnScroll";
 import {useEffect} from "react";
 import {router} from "next/client";
+import {usePostalCode} from "@/hooks/usePostalCode";
 
 export default function Home() {
-  const params = useSearchParams()
-  const postalCode = params?.get('postalCode')
+  const [postalCode, codeChanged] = usePostalCode()
   const { data, error, mutate, isLoading  } =
       useSWR('api/get-data',
-          (url): Promise<Craftsman[]> => getCraftsmen(url, postalCode ?? '', data));
+          (url): Promise<Craftsman[]> => getCraftsmen(url, postalCode, data, codeChanged));
   const { trigger  } = useSWRMutation('/search' , updateCraftsman);
   const rowHeight = 120
 

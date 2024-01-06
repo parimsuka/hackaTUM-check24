@@ -21,7 +21,7 @@ export async function sendPostalCode(postalCode: string) {
 }
 
 
-export async function getCraftsmen(url: string, postalCode: string, craftsmen?: Craftsman[]) {
+export async function getCraftsmen(url: string, postalCode: string, craftsmen?: Craftsman[], codeChanged?: boolean) {
     if (!postalCode) {
         throw new Error(`Request could not be completed. Postal code is required for this operation`)
     }
@@ -32,7 +32,7 @@ export async function getCraftsmen(url: string, postalCode: string, craftsmen?: 
     if ("error" in jsonData) {
         throw new Error(`Request could not be completed. Please check the endpoint. Error ${jsonData.error}`)
     }
-    return [...(craftsmen ?? []), ...jsonData.data.craftsmen]
+    return [...(codeChanged ? [] : craftsmen ?? []), ...jsonData.data.craftsmen]
 }
 
 
