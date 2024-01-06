@@ -27,10 +27,14 @@ def answer_craftsmen():
     postcode = int(postalcode)
     return crr.get(postcode)
 
-@app.route("/craftman/<id>", methods=['PATCH'])
+@app.route("/craftsmen/<id>", methods=['PATCH'])
 def update_craftsmen(id):
     id = int(id)
     return crr.update_craftsman(id, request.json)
+
+@app.route("/craftsmen/reset", methods=['POST'])
+def reset_cursor():
+    return crr.reset_postcode_cursor()
 
 
 class CraftsmenRankingResource(Resource):
@@ -71,9 +75,13 @@ class CraftsmenRankingResource(Resource):
             craftsman_dict[postcode] = craftsmen
         self.craftsman_dict = craftsman_dict
 
+    def reset_postcode_cursor(self):
+        self.i_th = 0
+        return jsonify({ "response": True })
+
     def get_craftsmen_ranking(self, postcode, update_size=20):
         if self.last_requested != postcode:
-            self.i_th = 0
+            self.reset_postcode_cursor()
             self.last_requested = postcode
         list_length = len(self.craftsman_dict[postcode])
         starting_index = self.i_th * update_size

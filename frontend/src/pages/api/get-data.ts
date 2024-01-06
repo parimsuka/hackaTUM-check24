@@ -3,11 +3,15 @@ import {NextApiRequest, NextApiResponse} from "next";
 interface ApiRequest extends NextApiRequest {
   query: {
     postalCode: string;
+    reset: "false" | "true";
   };
 }
 
 export default async function handler(req: ApiRequest, res: NextApiResponse) {
-  const data = await fetch(`http://localhost:5000/craftsmen?postalcode=${req.query.postalCode}`)
+  if (req.query.reset === "true") {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/craftsmen/reset`, { method: 'POST' })
+  }
+  const data = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/craftsmen?postalcode=${req.query.postalCode}`)
   const craftsmen = await data.json()
   res.send({ data: { craftsmen: craftsmen, type: 'success'} })
 }

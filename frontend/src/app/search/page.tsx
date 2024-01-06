@@ -1,6 +1,6 @@
 "use client"
 import ListItem from "@/components/listItem";
-import {getCraftsmen,updateCraftman} from "@/http/requests";
+import {getCraftsmen,updateCraftsman} from "@/http/requests";
 import Navbar from "@/components/nav-bar";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -14,8 +14,10 @@ import {router} from "next/client";
 export default function Home() {
   const params = useSearchParams()
   const postalCode = params?.get('postalCode')
-  const { data, error, mutate, isLoading  } = useSWR('api/get-data', (url): Promise<Craftsman[]> => getCraftsmen(url, postalCode ?? '', data));
-  const { trigger  } = useSWRMutation('/search' , updateCraftman);
+  const { data, error, mutate, isLoading  } =
+      useSWR('api/get-data',
+          (url): Promise<Craftsman[]> => getCraftsmen(url, postalCode ?? '', data));
+  const { trigger  } = useSWRMutation('/search' , updateCraftsman);
   const rowHeight = 120
 
   const patchData = async (data:{
@@ -28,11 +30,11 @@ export default function Home() {
     // patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
     console.log("here")
   },[])
-  patchData({
-    maxDrivingDistance:5,
-    profileDescriptionScore:6,
-    profilePictureScore:7
-  }).then((craftmen) => {console.log(craftmen[0])})
+  // patchData({
+  //   maxDrivingDistance:5,
+  //   profileDescriptionScore:6,
+  //   profilePictureScore:7
+  // }).then((craftmen) => {console.log(craftmen[0])})
 
   const loadMoreData = async () => {
     await mutate()
