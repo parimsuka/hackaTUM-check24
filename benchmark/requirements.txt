@@ -5,3 +5,4 @@ scipy==1.11.3
 tqdm==4.66.1
 flask==3.0.0
 flask-restful==0.3.10
+load_dotenv

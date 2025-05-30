@@ -1,24 +1,28 @@
-FROM node:20-alpine
+FROM node:18-alpine
 
-# Create and define the node_modules's cache directory.
-RUN mkdir -p /usr/src/cache
-WORKDIR /usr/src/cache
+# Set working directory
+WORKDIR /app
 
-# Install the application's dependencies into the node_modules's cache directory.
-COPY package.json ./
-COPY package-lock.json ./
-
-# Trick, to have higher build speed
+# Install pnpm globally
 RUN npm install -g pnpm
+
+# Copy only dependency files first (cache optimization)
+COPY package.json pnpm-lock.yaml* ./
+
+# Install dependencies
 RUN pnpm install
-RUN npm install -g next
 
+# Copy rest of the source code
+COPY . .
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY . ./
+# Set environment variable for production build
+ENV NODE_ENV=production
 
-RUN npm run build
+# Build the Next.js app
+RUN pnpm run build
 
+# Expose port
 EXPOSE 80
 
+# Start the app
+CMD ["pnpm", "start"]

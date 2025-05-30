@@ -4,12 +4,11 @@ import {getCraftsmen,updateCraftsman} from "@/http/requests";
 import Navbar from "@/components/nav-bar";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import {AutoSizer, List, ScrollParams} from "react-virtualized"
-import {redirect, useSearchParams} from "next/navigation";
+import {AutoSizer, List} from "react-virtualized"
+import {redirect} from "next/navigation";
 import {Craftsman} from "@/types/utils";
 import {useLoadMoreOnScroll} from "@/hooks/useLoadMoreOnScroll";
 import {useEffect} from "react";
-import {router} from "next/client";
 import {usePostalCode} from "@/hooks/usePostalCode";
 
 export default function Home() {
@@ -25,11 +24,6 @@ export default function Home() {
     profilePictureScore:number,
     profileDescriptionScore:number
   }) =>  await trigger(data)
-
-  useEffect(() => {
-    // patchData({maxDrivingDistance:5,profilePictureScore:6,profileDescriptionScore:7});
-    console.log("here")
-  },[])
   // patchData({
   //   maxDrivingDistance:5,
   //   profileDescriptionScore:6,
@@ -56,7 +50,7 @@ export default function Home() {
       <div className="px-16 py-12 w-full">
         <Navbar greetings="Hello citizen, from München" message="Meet local expertise"/>
         <div className="mt-16 flex-1 h-[70vh]">
-          <AutoSizer >
+          <AutoSizer>
             {
               (({ width, height }) => (
                 <List

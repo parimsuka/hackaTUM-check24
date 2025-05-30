@@ -9,6 +9,10 @@ import time
 import os
 import traceback
 
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='.env')
+
+PORT = os.getenv('PORT')
 app = Flask(__name__)
 api = Api(app)
 
@@ -35,6 +39,10 @@ def update_craftsmen(id):
 @app.route("/craftsmen/reset", methods=['POST'])
 def reset_cursor():
     return crr.reset_postcode_cursor()
+
+@app.route("/postcodes", methods=['GET'])
+def get_postcodes():
+    return jsonify([pc.postcode for pc in crr.all_post_codes.postcodes])
 
 
 class CraftsmenRankingResource(Resource):
@@ -141,4 +149,4 @@ if __name__ == '__main__':
     gba = GraphBasedApproach(asp.service_providers, apc.postcodes)
 
     crr = CraftsmenRankingResource(apc, asp, gba)
-    app.run(port=3000)
+    app.run(host="0.0.0.0", port=PORT)

@@ -25,7 +25,7 @@ export async function getCraftsmen(url: string, postalCode: string, craftsmen?: 
     if (!postalCode) {
         throw new Error(`Request could not be completed. Postal code is required for this operation`)
     }
-    const data = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND}/${url}?postalCode=${postalCode}&reset=${(craftsmen?.length ?? 0) <= 0}`, {
+    const data = await fetch(`api/get-data?postalCode=${postalCode}&reset=${(craftsmen?.length ?? 0) <= 0}`, {
         method: 'GET',
     })
     const jsonData = await data.json() as AppResponse<CraftsmanResponse, boolean>
@@ -43,7 +43,7 @@ type UpdateCraftsmanInfo = {
 }
 
 export async function updateCraftsman(url: string, {arg}: { arg: UpdateCraftsmanInfo }) {
-    const data = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND}${url}`, {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND}/${url}`, {
         method: 'PATCH',
         body: JSON.stringify(arg)
     })

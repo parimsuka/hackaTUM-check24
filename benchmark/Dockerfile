@@ -1,6 +1,6 @@
 FROM python:3.12
 
-EXPOSE 3000
+EXPOSE 8080
 
 WORKDIR /usr/src/app
 

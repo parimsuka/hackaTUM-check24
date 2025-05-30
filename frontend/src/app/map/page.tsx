@@ -49,7 +49,6 @@ export default function ShowExpertsMap() {
         });
         markers.map((value, index) => {
             const popup = new maptilersdk.Popup({offset: 30})
-            console.log(popup)
             popup.setHTML(`
                  <div class="worker-picture">
                 </div>
